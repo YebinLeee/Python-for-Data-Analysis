@@ -1,0 +1,6 @@
+Name Height
+Aaron 175.6
+Brian 178.3
+Alex 172.8
+David 184.2
+Eric 188.1
