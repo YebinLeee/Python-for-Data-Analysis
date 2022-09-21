@@ -50,14 +50,18 @@ import numpy as np
 data1 = [6, 7.5, 8, 0, 1]
 arr1 = np.array(data1) # ndarray 배열 생성
 print(arr1)
+print(arr1.ndim) # 차원
+print(arr1.shape) # 행렬 개수 (행, 열)
+print(arr1.dtype) # 지료형 타입
 
 # 다차원 배열
 data2 = [[1,2,3,4], [5,6,7,8]]
 arr2 = np.array(data2)
 print(arr2)
-
 print(arr2.ndim) # 배열의 차원 리턴 (2)
 print(arr2.shape) # 행렬 개수 (2,4)
+print(arr2.dtype) # 자료형 타입 (float64)
+
 ```
 <br>
 
@@ -67,16 +71,21 @@ print(arr2.shape) # 행렬 개수 (2,4)
 # 초기화
 arr3 = np.zeros((2,3)) # 2x3 행렬의 값을 0으로 초기화
 print(arr3)
+print(arr3.ndim)
 
-arr4 = np.ones((2,3)) # 1로 초기화
-print(arr4)
+arr3 = np.ones((2,3)) # 1로 초기화
+print(arr3)
+print(arr3.ndim)
 
 # 초기화 없이 배열 생성
-arr5 = np.empty((2,3))
+arr4 = np.empty((2,3))
+print(arr4)
 
 # 리스트 대신 배열을 사용해 값 리턴
 # 정렬된 배열 요소로 리턴
-arr6 = np.arrange(5)
+arr = np.arange(5)
+print(arr)
+
 ```
 <br>
 
@@ -88,11 +97,12 @@ arr6 = np.arrange(5)
 ```python
 arr = np.array([[1,2,3],[4,5,6]])
 print(arr)
-
-arr2 = arr*arr # 대응되는 각 요소 곱하여 제곱의 값 생성
+# 대응되는 각 요소 곱하여 제곱의 값 생성
+arr2 = arr*arr 
 print(arr2) 
 
 arr2 = 1/arr
+print(arr2)
 arr2 = np.array([[0,4,1],[7,2,12]])
 val = arr2>arr # 각 요소별로 비교 연산 수행
 print(val)
@@ -102,7 +112,7 @@ print(val)
 ### 인덱싱과 슬라이싱
 
 ```python
-arr = np.arrange(10)
+arr = np.arange(10)
 print(arr)
 
 print(arr[5]) # indexing
@@ -129,7 +139,9 @@ print(arr3d[0])
 
 ```python
 old = arr3d[0].copy() # 첫번째 배열을 복사
+print(old)
 print(arr3d[1, 0]) # 두번째 배열의 0번째 값
+print(arr3d[1,0,2]) # 두번쨰 배열의 0행 2열 값
 ```
 
 <br>
