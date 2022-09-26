@@ -10,9 +10,6 @@ def student():
             print(s, end = ' ')
             student_list.remove(s) # 리스트에서 제거
     print("\nstudent_list = ", student_list)
-  
-student()
-
 def getHeight():
     path = '0914/height.txt'
     f = open('0914/height.txt', 'r') # 파일 열기
@@ -31,5 +28,11 @@ def getHeight():
         print(i+1, "등 : ", heightList[i])
         
     f.close() # 파일 닫기
+ 
+
+def main():
+    student()
+    getHeight()
     
-getHeight()
+if __name__ == '__main__': # main()
+    main()
