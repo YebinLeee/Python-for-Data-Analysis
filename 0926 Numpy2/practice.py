@@ -1,12 +1,14 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from numpy.linalg import inv 
+import random as rd 
 
 # 배열 지향 프로그래밍 (sqrt)
 def array_oriented_sqrt():
-    points = np.arange(-5, 5, 0.01) # -5에서 5사이의 0.01 간격의 값들을 points 배열에 담음
+    points = np.arange(-5, 5, 0.01) # -5에서 5사이의 0.01 간격의 값들을 points 1차원 배열에 담음
     # print(points)
     # np.meshgrid() -> 두 1차원 배열들로 두 개의 2차원 행렬을 생성
-    x,y=np.meshgrid(points, points) # 모든 (x,y) 쌍 생성
+    x,y=np.meshgrid(points, points) # points 배열을 tuple(x,y) 생성하여 2차원 배열로써 생성
     print('x:', x, 'y:',y)
 
     z=np.sqrt(x**2+y**2) # 루트 제곱근 값을 z에 대입
@@ -32,7 +34,7 @@ def case_expression():
     print(array)
     print(array > 0)
     
-    # replace all positive values with 2 and all negative values with –2. ret = np.where(array > 0, 2, -2)
+    # 0보다 크면 2로, 그렇지 않으면 -2로 대체
     ret = np.where(array > 0, 2, -2)
     print(ret)
    
@@ -128,8 +130,42 @@ def random_method():
     samples = np.random.normal(size=(4,4))
     print(samples)
     
-    rng = np.random.seed(1234)
-    ret = rng.randn(10)
+    # rng = np.random.seed(1234) # global seed
+    rng = np.random.RandomState(1234) # local seed
+    ret = rng.randn(10) 
     print(ret)
     
+    position = 0
+    points = [position] # 0번을 배열에 담음
+    steps = 1000
+    
+    # 0에서 시작하여 1000회 반복
+    for _ in range(steps):
+        if rd.randint(0,1):  # 0~1 사이의 난수를 생성하여 0보다 크면 1, 그렇지 않으면 -1로 포인트 더함
+            step = 1
+        else:
+            step = -1
+        position += step # step만큼 position에 더함
+        points.append(position) # position 값을 points에 추가
+        
+    plt.plot(points[:100]) # points를 matplot에 뿌려서 보이기
+    plt.show()
+    
+    # 포인트에 대한 누적합을 배열식으로 표현
+    nsteps = 1000
+    draws = np.random.randint(0,2,size=nsteps)
+    steps = np.where(draws>0, 1, -1)
+    walk = steps.cumsum() # 누적 합 저장
+    
+    plt.plot(walk[:100])
+    plt.show()
+    
+    # 통계값
+    print('min : ', walk.min())
+    print('max : ' , walk.max())
+    val = np.abs(walk) >= 10
+    ret = val.argmax()
+    print(ret)
+    
+        
 random_method()
