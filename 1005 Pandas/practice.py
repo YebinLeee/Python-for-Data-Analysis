@@ -114,7 +114,7 @@ def PandasIndexes():
     frame2 = frame.reindex(columns=states)
     print(frame2)
   
-def DroppingEntires():
+def DroppingEntries():
     obj = pd.Series(np.arange(5.), index=['a','b','c','d','e'])
     print(obj)
     
@@ -133,11 +133,11 @@ def DroppingEntires():
     
 def main():
     # SeriesFunction()
-    # SeriesNumpy()
+    SeriesNumpy()
     # SeriesDictionary()
     # DataFrameFunc()
     # PandasIndexes()
-    DroppingEntires()
+    # DroppingEntries()
     
 if __name__ == '__main__': # main()
     main()
