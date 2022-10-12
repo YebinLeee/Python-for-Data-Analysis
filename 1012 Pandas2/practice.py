@@ -109,6 +109,12 @@ def sorting():
     print(frame.sort_index())
     print(frame.sort_index(axis=1)) # 칼럼에 대한 정렬
     
+def sameLabel():
+    obj = pd.Series(range(5), index=['a','a','b','b','c'])
+    print(obj)
+    print(obj.index.is_unique) # 모든 레이블이 unique한가? -> False
+    print(obj['a'])
+    
 # 1부터 오름차순으로 값을 부여
 def ranking():
     obj = pd.Series([7,-5,7,4,2,0,4]) # 같은 값이 여러 개 있는 경우 평균값으로 랭크 값을 부여 (3,4번째인 경우 3.5, 3.5 부여)
@@ -116,12 +122,6 @@ def ranking():
     
     # 동일한 값이 있을 때 먼저 마주치는 데이터에 랭크를 먼저 부여
     print(obj.rank(method='first'))
-    
-def sameLabel():
-    obj = pd.Series(range(5), index=['a','a','b','b','c'])
-    print(obj)
-    print(obj.index.is_unique) # 모든 레이블이 unique한가? -> False
-    print(obj['a'])
     
 def pandasStat():
     df = pd.DataFrame([[1.4, np.nan], [7.1, -4.5],
@@ -144,6 +144,7 @@ def main():
     # applicationMapping()
     # sorting()
     # sameLabel()
+    # ranking()
     pandasStat()
     
 if __name__ == '__main__': # main()
