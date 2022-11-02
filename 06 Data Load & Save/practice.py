@@ -124,7 +124,7 @@ def main():
     # read_parts()
     # read_chunk()
     # to_csv_export()
-    # series_to_csv()
+    series_to_csv()
     
 if __name__ == '__main__': # main()
     main()

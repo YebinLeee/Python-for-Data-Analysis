@@ -12,9 +12,9 @@
 
 ### 데이터 처리 함수
 
-![Untitled](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FAvezV%2FbtrPS0C1wc9%2F69Y9d4poc7KL4z4kKpuUY0%2Fimg.png)
+<img src = "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FAvezV%2FbtrPS0C1wc9%2F69Y9d4poc7KL4z4kKpuUY0%2Fimg.png" width="400">
 
-![Untitled](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FcJwaq4%2FbtrPVDtKTlg%2FD7wv38xg76lW5GN2gKozU1%2Fimg.png)
+<img src = "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FcJwaq4%2FbtrPVDtKTlg%2FD7wv38xg76lW5GN2gKozU1%2Fimg.png" width="400">
 
 ## 데이터 읽어 오기(Data Loading)
 
@@ -255,3 +255,331 @@
     
     ![Untitled](https://blog.kakaocdn.net/dn/bxMVCg/btrPUmTkGo2/t05prc44IeMeGSvnjRYQMk/img.png)
     
+
+
+### 구분자 형식 다루기
+
+- `pandas.read_table`  함수를 이용해 디스크에 표 형태로 저장된 대부분의 파일 형식을 불러올 수 있지만, 수동으로 처리해야 하는 경우도 있다.
+    - 데이터를 불러오는데 실패하게끔 만드는 잘못된 라인이 포함되어 있는 데이터를 전달 받는 경우도 종종 있다.
+- 구분자가 한 글자인 파일은 내장 `csv` 모듈을 이용해 처리할 수 있다.
+    
+    ```python
+    # 구분자 형식 다루기
+    def separator():
+        import csv # 파이썬 내장 csv 모듈 사용
+        
+        path = 'examples/ex7.csv'
+        f = open(path)
+        reader = csv.reader(f) # csv.reader 함수에 파일 객체 넘기기
+        for line in reader:
+            print(line) # 큰 따옴표가 제거된 튜플 얻기
+    ```
+    
+    <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FPBFJ4%2FbtrQe2UaIHO%2FKwjhPHYEIsFQS9ICbJLVMk%2Fimg.png">
+  
+    <img src = "">
+
+- 데이터를 원하는 형식의 출력 파일로 구성하기 (`zip` 함수 이용하여 데이터 컬럼 사전 만들기)
+    
+    ```python
+        # 원하는 형태로 데이터 넣기
+        with open(path) as file:
+            lines = list(csv.reader(file))
+        header, values = lines[0], lines[1:]
+        
+        # 사전 표기법과 로우를 컬럼으로 전치해주는 zip(*values) 이용해 데이터 컬럼 사전 만들기
+        data_dict = {h:v for h,v in zip(header,zip(*values))} # header: 컬럼, values: 데이터
+        print(data_dict)
+    ```
+    
+     <img src = "">
+    
+
+- `csv.wirter` 메소드를 사용해 구분자를 가진 파일 생성하기
+    - `pandas` 객체를 통해 전체 데이터를 다룰 수 있기 때문에, `csv` 모듈 사용보다는 `pdnadas`를 활용한 파일 생성이 훨씬 효율적이다.
+    
+    ```python
+    # csv.writer 메소드를 사용해 구분자를 가진 파일 생성
+    def separator_writer():
+        import csv # 파이썬 내장 csv 모듈 사용
+        
+        with open('examples/mydata.csv','w') as f:
+    				# 한 줄씩 데이터를 write해야 함
+            writer = csv.writer(f, dialect='excel')
+            writer.writerow(('one','two','three'))
+            writer.writerow(('1','2','3'))
+            writer.writerow(('4','5','6'))
+            writer.writerow(('7','8','9'))
+    ```
+    
+     <img src = "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2Fd0PbBE%2FbtrQeo4MRrY%2FDikqnu5lSsZ8rl847W5cYk%2Fimg.png">
+    
+
+### JSON 문자열 다루기
+
+- ********************JSON(Javascript Object Notation)******************** : 웹 브라우저와 다른 애플리케이션이 HTTP 요청으로 데이터를 보낼 때 널리 사용하는 표준 파일 형식
+    - CSV 같은 표 형식의 텍스트보다 좀 더 유연한 데이터 형식
+    - 기본 자료형으로는 객체(사전), 배열(리스트), 문자열, 숫자, 불리언, Null 을 포함
+    - NoSQL 데이터 (대표적으로 MongoDB - mobile side에서 자주 사용되는 DB) 를 다루는데 유용
+- 파이썬 표준 라이브러리 `json` 을 사용해 json 데이터를 처리해보자.
+    - `json.loads()` : json 문자열을 파이썬 형태로 변환하기
+    - `json.dumps()` : 파이썬 객체를 JSON으로 변환
+    
+    ```python
+    # JSON 데이터 다루기
+    def json_data():
+        # obj에 json 객체 저장하기
+        obj = """
+        {
+            "name":"Wes",
+            "places_lived":["US", "Spain", "Germany"],
+            "pets":None,
+            "siblings":[
+                {
+                    "name":"Scott",
+                    "age":30,
+                    "pets":["Zeus", "Zuco"]
+                },
+                {
+                    "name":"Katie",
+                    "age":38,
+                    "pets":["Stache","Cisco"]                
+                }
+            ]
+         }
+         """
+         
+        # Json 문자열을 파이썬 형태로 변환하기 위한 함수 json.loads
+        result = json.loads(obj)
+        print(result['name'])
+        asjson = json.dumps(result) # 파이썬 객체를 JSON 형태로 변환
+        print(asjson)
+        
+        sibings = pd.DataFrame(result['siblings'], columns=['name','age'])
+    ```
+    
+
+- `to_json()` : pandas 데이터를 json으로 저장하기 **
+    
+    ```python
+    def json_data_practice():
+        data = pd.read_json('examples/example.json') # Json 데이터 읽기
+        print(data)
+        
+        # pandas 데이터를 json으로 저장하기 : to_json() 함수
+        print(data.to_json())
+        print(data.to_json(orient='records'))
+    ```
+    
+    <img src = "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FbxnsJw%2FbtrQbtyYK8i%2FYjuRQLtgNkzrpvPtB1vkjK%2Fimg.png">
+
+    <img src = "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2F7Lq69%2FbtrQeNpnHUz%2Fmarf4vskIEUitxsAkEuxKk%2Fimg.png">
+    
+
+## 웹 데이터 다루기: HTML, XTML
+
+### HTML 스크래핑
+
+- 파이썬에서는 `lxml`, `BeautifulSoup` , `html5lib` 과 같은 HTML과 XML 형식의 웹 데이터를 읽고 쓸 수 있는 라이브러리가 많다. 그중에서도 `lxml`은 가장 빠르게 동작하고 깨진 HTML과 XML 파일도 잘 처리해줌
+- 내장 함수 `read_html()` : lxml이나 BeautifulSoup` 같은 라이브러리를 사용해 자동으로 HTML 파일을 파싱하여 DataFrame으로 변환해준다.
+    - <table> 태그에 포함된 모든 표 형식의 데이터에 대한 구문 분석을 수행
+
+### 예제
+
+```python
+# html 웹 스크래핑
+def html_scrapping():
+    tables = pd.read_html('examples/fdic_failed_bank_list.html')
+    print(len(tables))
+    
+    failures = tables[0]
+    print(failures.head)
+    print(failures.columns)
+    print(pd.DataFrame(failures['Closing Date']))
+    
+    # 데이터 정제, 연도별 부도은행 수 계산 등의 분석
+
+		# Clsoing Date 칼럼의 날짜 데이터 가져오기
+    close_timestamps = pd.to_datetime(failures['Closing Date'])
+    print(close_timestamps)
+    
+    cnt = close_timestamps.dt.year.value_counts() # year별로 카운트값 구하기
+    print(cnt)
+```
+
+- 전체 데이터 확인
+    
+    <img src = "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FEyYEy%2FbtrQeNv8J4e%2FgIkVj76rUQ2kukGnOwA1HK%2Fimg.png">
+    
+- `Closing Date` 컬럼의 데이터 확인
+    
+    <img src = "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FET8vr%2FbtrQdzrUmeZ%2FAQJqC1BFMCKaX3sGPuONW0%2Fimg.png">
+    
+- `pd.date_time` 객체로 변환하여 데이터 확인
+    
+    <img src = "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2Feayeaj%2FbtrQaJWji95%2FaCOLaFfH8vBu1Y2iKWXn0k%2Fimg.png">
+    
+
+### XML 스크래핑
+
+- **********************************************************XML(Extensible Markup Lanauge**********************************************************) : 계층적 구조와 메타 데이터를 포함하는 중첩된 데이터 구조를 지원하는 데이터 형식
+- xml은 구조적으로 html보다 범용적이다. lxml을 이용해 XML 형식의 데이터를 파싱해보자.
+
+### 예제
+
+- 뉴욕 MTA에서 공개하는 버스, 전철 운영 데이터
+- xml 파일로 제공되는 실적 자료 xml 파일을 읽어 보자.
+
+```python
+# xml 웹 스크래핑
+def xml_scrapping():
+    from lxml import objectify
+    
+    path='examples/Performance_MNR.xml' # 전철 실적 데이터
+    parsed = objectify.parse(open(path)) # xml 파일 파싱
+    root = parsed.getroot() # 루트 노드에 대한 참조
+    
+    data = []
+    skip_fields = ['PARENT_SEQ', 'INDICATOR_SEQ', 'DESIRED_CHANGE', 'DECIMAL_PLACES'] # 제외할 컬럼들
+    
+    for elt in root.INDICATOR:
+        el_data = {}
+        for child in elt.getchildren():
+            if child.tag in skip_fields:
+                continue
+            el_data[child.tag] = child.pyval # 태그:데이터 사전에 추가
+        data.append(el_data)
+        
+    perf = pd.DataFrame(data)
+    print(perf.head())
+    
+    # xml 데이터 얻기
+    from io import StringIO
+    tag = '<a href="http://www.google.com">Google</a>'
+    root = objectify.parse(StringIO(tag)).getroot() # 루트 노드
+    print(root)
+    print(root.getchildren())
+    print(root.get('href'))
+    print(root.text)
+```
+
+ <img src = "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FMfxJB%2FbtrQeujvd4D%2F0uNZ0qt5imK47kLUofnMtk%2Fimg.png">
+
+<br>
+
+# 2. 이진 데이터 형식
+
+- 데이터를 효율적으로 저장하는 가장 손쉬운 방법은 파이썬에 기본적으로 내장되어 있는 pickle ****************직렬화****************를 사용해 데이터를 이진 형식으로 저장하는 것
+    - 오래 보관할 필요가 없는 데이터일 경우에만 추가. 버전 업 된 경우 읽어오지 못할 가능성 존재
+- pandas 객체는 pickle을 이용해 데이터를 저장하는 `to_pickle()` 메서드를 사용해 이진 데이터 형식으로 저장
+- 이진 데이터 파일을 읽을 때는 `pd.read_pickle()` 메서드를 사용한다
+
+```python
+# 이진 데이터 형식
+def binary_data():
+    frame = pd.read_csv('examples/ex1.csv')
+    print(frame)
+    
+    frame.to_pickle('examples/frame_pickle') # 이진형식으로 데이터 저장 (직렬화된 객체 저장)
+    binary_frame = pd.read_pickle('examples/frame_pickle') # read_pickle()로 읽기
+    print(binary_frame)
+```
+
+- pandas는 HDF5와 Message-Pack 두가지 바이너리 포맷을 지원한다.
+- Numpy를 위한 다른 저장 형식도 존재함
+    - Bcolz : Blocks 압축 알고리즘에 기반한 압축이 가능한 컬럼지향 바이너리 포맷
+    - Feather: 아파치 에로우의 메모리 포맷 사용
+
+### HDF5
+
+- ********HDF5 (Hierarchial Data Format)******** : 대량의 과학 계산용 배열 데이터를 저장하기 위한 계층적 데이터 파일 포맷
+- 여러 데이터셋을 저장하고 부가 정보를 기록할 수 있다. 다양한 압축 기술을 사용해 온더플라이(on-the-fly, 실시간) 압축을 지원하며 반복되는 패턴을 가진 데이터를 효과적으로 저장 가능
+- 메모리에 모두 적재할 수 없는 엄청나게 큰 데이터를 아주 큰 배열에서 필요한 작은 부분들만 효과적으로 읽고 쓰는데 유용
+- `HDFStore` 클래스는 사전처럼 작동하므로, dataframe 객체처럼 다룰 수 있다
+- `fixed` 와 `rable` 두 가지 저장 스키마를 지원
+    
+    ```python
+    # HDF5 형식의 이진 데이터
+    def HDF5_format():
+        frame = pd.DataFrame({'a': np.random.randn(100)})
+        store = pd.HDFStore('mydat.h5') # 바이너리 파일 객체 저장 
+        store['obj1'] = frame # dataframe 객체를 저장
+        store['obj1_col'] = frame['a']
+        
+        print(store)
+        print(store['obj1'], store['obj1_col'])
+        
+        
+        # obj2에 table포맷으로 frame객체 저장
+        store.put('obj2', frame, format='table')
+        print(store.select('obj2',where=['index>=10 and index<=15'])) # 쿼리 연산 지원
+        
+        store.close()
+        
+        # frame 객체를 바로 hdf로 저장
+        frame.to_hdf('mydata.h5', 'obj3', format='table')
+        print(pd.read_hdf('mydata.h5', 'obj3', where=['index<5']))
+    ```
+    
+    <img src = "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FdvvG57%2FbtrQb22bsef%2F4kAgZPgIhHK0nqvQvquKlK%2Fimg.png"> <img src = "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FkJ9z7%2FbtrQepvOUmn%2FiC4Uki4pGYOpvk1PSbUK4K%2Fimg.png">
+    
+
+### MS 엑셀 파일 다루기
+
+- `ExcelFile` 클래스나 `pandas.read_excel()` 함수를 사용해 엑셀 데이터를 읽어낼 수 있도록 지원함
+- xls, xlsx 파일을 읽기 위해 xlrd, openpyxl 패키지를 사용
+    
+    ```python
+    # 엑셀 파일 다루기
+    def excel_data():
+        xlsx = pd.ExcelFile('examples/ex1.xlsx')
+        print(pd.read_excel(xlsx, 'Sheet1')) # xlsx 파일의 시트 읽기
+        
+        frame = pd.read_excel('examples/ex1.xlsx', 'Sheet1')
+        
+        # pd 데이터를 엑셀 파일로 저장하기
+        writer = pd.ExcelWriter('examples/ex2.xlsx')
+        frame.to_excel(writer, 'Sheet1')
+        # frame.to_excel('examples/ex2.xlsx')
+        writer.save()
+    ```
+    
+
+<br>
+
+
+# 3. 웹 API와 함께 사용하기
+
+- 데이터 피드를 JSON 이나 다른 형식으로 얻을 수 있게 공개 API를 제공하는 웹사이트가 많다.
+- 많은 패키지 중, `requests` 패키지를 이용해 파이썬으로 API를 사용해보자
+- `GET` http 요청을 생성하여 pandas 깃허브에서 최근 30개의 이슈를 가져와보자.
+    
+    ```python
+    # requests 이용해 http api 이용하기
+    def web_api_http():
+        import requests
+        
+        url = 'https://api.github.com/repos/pandas-dev/pandas/issues'
+        resp = requests.get(url) # GET 요청을 보내보자
+        
+        print(resp) # 응답 http status 코드: 200(성공) or else
+        
+        # 깃허브 이슈 페이지(댓글 제외)에서 찾을 수 있는 모든 데이터 추출
+        data = resp.json() # 응답 json 데이터를 파이썬 사전 형태로 변환
+        print(data[0]['title'])
+        
+        # DataFrame객체로 생성하고 관심 있는 필드만 추출하기
+        issues = pd.DataFrame(data, columns=['number', 'title',' labels', 'state'])
+        print(issues)
+    ```
+
+    <img src = "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FAzBMu%2FbtrQfDmiZWu%2F3moMQLUrhoqn0PCHxcJAWk%2Fimg.png">
+
+<br>
+
+
+# 4. 데이터베이스와 함께 사용하기
+
+- SQL 기반의 관계형 DB(SQL, PostgreSQL, MySQL) 에서 데이터를 읽어 와 DataFrame에 저장해보자
+- 파이썬 내장 `sqlite3` 드라이버를 사용하여 SQLite db를 이용해보자.
+- `SQLAlchemy` 를 이용한 연결을 통해 쉽게 db를 다룰 수 있음
