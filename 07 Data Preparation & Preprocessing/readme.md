@@ -134,7 +134,7 @@
 - `df.duplicated()`  : 중복된 로우 발견하기
 - `df.drop_duplicates()` : duplicated 배열이 False인 DataFrame 반환
 - 기본적으로 두 메서드는 모든 컬럼에 적용되며, 처음 발견된 값을 발견하거나 반환
-    - `keep=last` 옵션은 마지막으로 발견된 값을 반환
+    - `keep='last'` 옵션은 마지막으로 발견된 값을 반환
     - 중복 찾아내기 위한 부분합 따로 지정 가능
     
     ```python
@@ -152,7 +152,7 @@
         print(data.drop_duplicates(['k1'])) # k1 컬럼에 기반하여 중복 걸러내기
         
         # a마지막으로 발견된 값을 반환
-        print(data.drop_duplicates(['k1', 'k2'], keep=last))
+        print(data.drop_duplicates(['k1', 'k2'], keep='last'))
     ```
     
 
@@ -258,7 +258,7 @@ def change_column_name():
         - categories: 카테고리 이름
         - `value_counts(cutted)` : Categorical 객체 cutted를 각 그룹별로 속한 데이터 개수 센 Series 반환
         - b 자리에 그룹 리스트가 아닌 정수 값을 넘겨주는 경우, 해당 정수만큼  균등한 길이의 그룹을 자동으로 계산
-    - `pandas.cqut()` : 표본 변위치(샘플 수)를 기반으로 데이터를 분할
+    - `pandas.qcut()` : 표본 변위치(샘플 수)를 기반으로 데이터를 분할
         - cut() 의 경우 데이터의 분산에 따라 각각 그룹마다 데이터 수가 다르게 나뉘는데, qcut() 은 표준 변위치를 사용하여 적다히 같은 크기의 그룹으로 나눌 수 있음
     
     ```python
@@ -284,12 +284,12 @@ def change_column_name():
         
         
         # 그룹의 경계값이 아닌 그룹의 개수를 넘겨주면 데이터의 최솟값, 최댓값을 기준으로 균등한 길이의 그룹을 자동 계산
-        data = pd.random.randn(20)
+        data = np.random.randn(20)
         print(pd.cut(data, 4, precision=2)) # 균등분포 내에서 4개의 그룹으로 나누는 경우 (precision: 소수점 아래 2자리로 제한)
     
         # qcut: 표본 변위치를 기반으로 데이터 분할
         data = np.random.randn(1000)
-        cats = pd.cqut(data, 4) # 4분위로 분류
+        cats = pd.qcut(data, 4) # 4분위로 분류
         print(cats)
         
         print(pd.value_counts(cats)) # 각 그룹의 개수 250개
@@ -315,12 +315,12 @@ def change_column_name():
         # 한 컬럼에서 절댓값이 3을 초과하는 데이터 탐색
         col = data[2]
         print(col[np.abs(col)>3])
-        print(data[(np.abs(data)>3).any()]) # 절댓값 3 초과하는 값이 들어있는 모든 로우 선택시
+        print(data[(np.abs(data)>3)].any()) # 절댓값 3 초과하는 값이 들어있는 모든 로우 선택시
         
         data[np.abs(data)>3] = np.sign(data)*3 # 초과하는 값을 3, -3으로 변경
         print(data.describe())
         
-        print(np.sign(data).heaad()) # 양수, 음수에 따라 1이나 -1 담긴 배열을 반환
+        print(np.sign(data).head()) # 양수, 음수에 따라 1이나 -1 담긴 배열을 반환
     ```
     
 
@@ -397,7 +397,7 @@ def movies_with_categories():
     print(genres)
     
     # 표시자 DataFrame 생성
-    zero_matrix = np.zeroes((len(movies), len(genres)))
+    zero_matrix = np.zeros((len(movies), len(genres)))
     dummies = pd.DataFrame(zero_matrix, columns=genres)
     
     # 각 영화 순회하며 dummies의 각 로우 항목을 1로 설정
