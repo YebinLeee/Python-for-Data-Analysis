@@ -147,7 +147,8 @@ def HDF5_format():
     
     # frame 객체를 바로 hdf로 저장
     frame.to_hdf('mydata.h5', 'obj3', format='table')
-    print(pd.read_hdf('mydata.h5', 'obj3', where=['index<5']))
+    hdf_data = pd.read_hdf('mydata.h5', 'obj3', where=['index < 5'])
+    print(hdf_data)
     
     
 # 엑셀 파일 다루기
@@ -226,10 +227,10 @@ def main():
     # html_scrapping()
     # xml_scrapping()
     # binary_data()
-    # HDF5_format()
+    HDF5_format()
     # excel_data()
     # web_api_http()
-    database_data()
+    # database_data()
     
 if __name__ == '__main__': # main()
     main()
