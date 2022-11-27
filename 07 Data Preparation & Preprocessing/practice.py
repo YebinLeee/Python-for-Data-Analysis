@@ -90,7 +90,7 @@ def duplicated_method():
     print(data.drop_duplicates(['k1'])) # k1 컬럼에 기반하여 중복 걸러내기
     
     # a마지막으로 발견된 값을 반환
-    print(data.drop_duplicates(['k1', 'k2'], keep='last'))
+    print(data.drop_duplicates(['k1', 'k2'], keep=last))
    
 # 데이터 형태 변환하기
 def data_transformation_by_mapping():
@@ -152,7 +152,7 @@ def change_column_name():
     print(data)
 
 # 그룹 분석    
-def discretize():
+def discretization():
     ages = [20,22,25,27,21,34,37,31,61,45,41,32]
     bins = [18,25,35,60,100] # 18-25, 26-35, 36-60, 60 이상의 그룹
     # Catagoricals 객체 반환 : pandas의 cats는 각 ages 데이터가 속한 bins 그룹의 리스트 반환
@@ -173,13 +173,13 @@ def discretize():
     
     
     # 그룹의 경계값이 아닌 그룹의 개수를 넘겨주면 데이터의 최솟값, 최댓값을 기준으로 균등한 길이의 그룹을 자동 계산
-    data = np.random.randn(20)
+    data = pd.random.randn(20)
     print(pd.cut(data, 4, precision=2)) # 균등분포 내에서 4개의 그룹으로 나누는 경우 (precision: 소수점 아래 2자리로 제한)
 
 
     # qcut: 표본 변위치를 기반으로 데이터 분할
     data = np.random.randn(1000)
-    cats = pd.qcut(data, 4) # 4분위로 분류
+    cats = pd.cqut(data, 4) # 4분위로 분류
     print(cats)
     
     print(pd.value_counts(cats)) # 각 그룹의 개수 250개
@@ -195,12 +195,12 @@ def handle_outlier():
     # 한 컬럼에서 절댓값이 3을 초과하는 데이터 탐색
     col = data[2]
     print(col[np.abs(col)>3])
-    print(data[(np.abs(data)>3)].any()) # 절댓값 3 초과하는 값이 들어있는 모든 로우 선택시
+    print(data[(np.abs(data)>3).any()]) # 절댓값 3 초과하는 값이 들어있는 모든 로우 선택시
     
     data[np.abs(data)>3] = np.sign(data)*3 # 초과하는 값을 3, -3으로 변경
     print(data.describe())
     
-    print(np.sign(data).head()) # 양수, 음수에 따라 1이나 -1 담긴 배열을 반환
+    print(np.sign(data).heaad()) # 양수, 음수에 따라 1이나 -1 담긴 배열을 반환
 
 # 치환과 임의 샘플링
 def permutatation_sampling_replacement():
@@ -248,7 +248,7 @@ def movies_with_categories():
     print(len(genres), genres)
     
     # 표시자 DataFrame 생성
-    zero_matrix = np.zeros((len(movies), len(genres)))
+    zero_matrix = np.zeroes((len(movies), len(genres)))
     dummies = pd.DataFrame(zero_matrix, columns=genres)
     print(dummies)
     
@@ -367,26 +367,14 @@ def vectorized_string_method():
     
 def main():
     # find_null_data()
-    # dropna_method()
-    # dropna_threshold()
-    # fillna_method()
-    # duplicated_method()
-    # data_transformation_by_mapping()
-    # data_replacement()
-    # change_column_name()
-    # discretize()
     # handle_outlier()
     # permutatation_sampling_replacement()
     # dummies()
-<<<<<<< HEAD
     # movies_with_categories()
     # string_method()
     # regular_expression()
     # regular_expression_email()
     vectorized_string_method()
-=======
-    movies_with_categories()
->>>>>>> cca9d24f096089d1c5a7c4a00a1644182e4f1538
     
 if __name__ == '__main__': # main()
     main()
