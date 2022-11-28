@@ -1,6 +1,7 @@
 import pandas as pd 
 import numpy as np
 from numpy import nan as NA
+import re 
 
 def find_null_data():
     # 누락값 np.nan은 NaN으로 표시 
@@ -244,25 +245,125 @@ def movies_with_categories():
     for x in movies.genres:
         all_genres.extend(x.split('|'))
     genres = pd.unique(all_genres)
-    print(genres)
+    print(len(genres), genres)
     
     # 표시자 DataFrame 생성
     zero_matrix = np.zeros((len(movies), len(genres)))
     dummies = pd.DataFrame(zero_matrix, columns=genres)
+    print(dummies)
     
     # 각 영화 순회하며 dummies의 각 로우 항목을 1로 설정
     gen = movies.genres[0]
     print(gen.split('|'))
     dummies.columns.get_indexer(gen.split('|'))
     
+    # 전체 영화 데이터에 genre 인덱서 지정
     for i, gen in enumerate(movies.genres):
         indices = dummies.columns.get_indexer(gen.split('|'))
         dummies.iloc[i, indices] = 1
          
     # movies와 조합하기
     movies_windic = movies.join(dummies.add_prefix('Genre_')) # Prefix 지정
-    print(movies_windic.iloc[0])
+    print(movies_windic.iloc[0]) # 첫번째 데이터 정보 얻어오기 (Toy Story)
+
+# 문자열 객체 메서드
+def string_method():
+    # split() - 특정 문자를 기준으로 문자열 자르기
+    val = 'a,b, guido'
+    print(val.split(',')) # 리스트 반환
     
+    # strip() - 공백 문자 제거
+    pieces = [x.strip() for x in val.split(',')] # 공백문자 제거한 문자열의 리스트 
+    print(pieces)
+    
+    # ''.join() - 리스트를 문자열로 합치기
+    print('::'.join(pieces))
+    
+    # 문자열 내 특정 문자열의 위치 찾기
+    print('guido' in val)
+    print(val.index(',')) # 처음으로 찾은 문자의 위치 찾기
+    # print(val.index(':')) # 문자 찾지 못한 경우 예외 처리 발생
+    print(val.find(':')) # 문자 찾지 못한 경우 -1 반환
+    
+    # count() - 특정 부분 문자열 발견 횟수 반환
+    print(val.count(','))
+    
+    # replace() - 찾아낸 패턴을 다른 문자열로 치환
+    print(val.replace(',', '::'))
+    
+# 정규 표현식 활용하기
+def regular_expression():
+    #하나 이상의 공백 문자를 의미하는 \s+를 사용하여 문자열 분리
+    text = "foo bar\t baz \tqux"
+    print(re.split('\s+', text)) # 정규 표현식 컴파일 후 split 메서드 실행
+    
+    # 직접 정규 표현식을 컴파일하여 얻은 정규 표현식 객체를 재사용하기
+    regex = re.compile('\s+')
+    print(regex.split(text))
+    
+    # 정규 표현식에 매칭되는 모든 패턴의 목록 얻기
+    print(regex.findall(text))
+    
+# 이메일 예제로 정규 표현식 이해하기
+def regular_expression_email():  
+    text = """Dave dave@google.com
+    Steve steve@gmail.com
+    Rob rob@gmail.com
+    Ryan ryan@yahoo.com    
+    """
+    
+    pattern = r'[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}'
+    
+    regex = re.compile(pattern, flags=re.IGNORECASE) # 대소문자 구분 안하기
+    
+    print(regex.findall(text)) # pattern에 해당하는 부분 문자열 리스트
+    
+    # search: 패턴과 일치하는 첫 번째 이메일 주소만 찾기
+    m = regex.search(text)
+    print(m) # 정규 표현 패턴이 위치하는 시작점, 끝점 반환
+    print(text[m.start():m.end()])
+    
+    # match: 문자열의 시작점에서부터 일치하는지 검사
+    print(regex.match(text))
+    
+    # sub: 주어진 문자열로 치환
+    print(regex.sub('REDACTED', text))
+    
+    # 사용자 이름, 도메인 이름, 도메인 접미사 3가지 컴포넌트로 나누기
+    pattern = r'([A-Z0-9._%+-]+)@([A-Z0-9.-]+)\.([A-Z]{2,4})'
+    regex = re.compile(pattern, flags=re.IGNORECASE)
+    # match: groups메서드로 각 패턴 컴포넌트의 튜플 얻기
+    m = regex.match('wesm@bright.net')
+    print(m.groups())
+    
+    print(regex.findall(text))
+    
+    # \1, \2 같은 특수 기호로 각 패턴 그룹에 접근
+    print(regex.sub(r'Username: \1 Doimain: \2, Suffix: \3', text))
+    
+# 벡터화된 문자열 함수
+def vectorized_string_method():
+    # 누락된 값을 포함하는 데이터
+    data = {'Dave':'dave@google.com',
+            'Steve':'steve@gamil.com',
+            'Rob':'rob@gmail.com',
+            'Wes':np.nan}
+    data = pd.Series(data)
+    print(data)
+    print(data.isnull())
+    
+    # NA 값을 넘어뛰도록 문자열의 gmail 포함 여부 확인
+    print(data.str.contains('gmail'))
+    
+    pattern = r'([A-Z0-9._%+-]+)@([A-Z0-9.-]+)\.([A-Z]{2,4})'
+    print(data.str.findall(pattern, flags=re.IGNORECASE))
+    
+    matches = data.str.match(pattern, flags=re.IGNORECASE)
+    print(matches)
+    
+    # print(matches.str.get(1))
+    # print(matches.str[0])
+    print(data.str[:5])
     
 def main():
     # find_null_data()
@@ -277,7 +378,11 @@ def main():
     # handle_outlier()
     # permutatation_sampling_replacement()
     # dummies()
-    movies_with_categories()
+    # movies_with_categories()
+    # string_method()
+    # regular_expression()
+    # regular_expression_email()
+    vectorized_string_method()
     
 if __name__ == '__main__': # main()
     main()

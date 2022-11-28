@@ -322,7 +322,7 @@ def regular_expression():
     print(regex.sub('READACTED', text))
     
     # 이메일 주소를 찾아 동시에 각 이메일 주소를 사용자, 도메인 이름, 도메인 접미사 세가지 컴포넌트로 나누는 경우  각 패턴을 괄호로 묶어줌
-    pattern = r'([A-Z0-9._%+-])+@([A-Z0-9.-])+(\.[A-Z]{2,4})'
+    pattern = r'([A-Z0-9._%+-]+)@([A-Z0-9.-]+)\.([A-Z]{2,4})'
     regex = re.compile(pattern, flags=re.IGNORECASE)
     
     m = regex.match('wesm@bright.net')
@@ -342,7 +342,7 @@ def vectorized_string():
     
     # 포함하는 문자열 확인
     print(data.str.contains('gmail'))
-    pattern = r'([A-Z0-9._%+-])+@([A-Z0-9.-])+(\.[A-Z]{2,4})'
+    pattern = r'([A-Z0-9._%+-]+)@([A-Z0-9.-]+)\.([A-Z]{2,4})'
     print(data.str.findall(pattern, flags=re.IGNORECASE))
     
     matches = data.str.match(pattern, flags=re.IGNORECASE)
