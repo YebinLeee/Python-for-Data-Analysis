@@ -378,11 +378,15 @@ def main():
     # handle_outlier()
     # permutatation_sampling_replacement()
     # dummies()
+<<<<<<< HEAD
     # movies_with_categories()
     # string_method()
     # regular_expression()
     # regular_expression_email()
     vectorized_string_method()
+=======
+    movies_with_categories()
+>>>>>>> cca9d24f096089d1c5a7c4a00a1644182e4f1538
     
 if __name__ == '__main__': # main()
     main()
