@@ -62,7 +62,7 @@ def summarize(data):
     
 def get_daily_result(data):
     daily_result = pd.DataFrame(data.groupby(['dates']).sum(), columns=['distance', 'level','mets', 'calories', 'steps'])
-    print(daily_result.head(200))
+    print(daily_result)
     return daily_result
 
 def visualize_daily_data(data):
@@ -71,11 +71,11 @@ def visualize_daily_data(data):
     plt.show()
     
 def get_group_by_hour(data):
-    return data.groupby(pd.Grouper(freq='60Min', base=0, label='right')).sum()
+    return data.groupby(pd.Grouper(freq='60Min', base=0, label='left')).sum()
 
 def result_by_time_series(data):
     # print(data.groupby(['dates']).count())
-    mask = data.loc['2022-10-11':'2022-10-13']
+    # mask = data.loc['2022-10-11':'2022-10-13']
     
     arr = [data.loc['2022-10-10'], data.loc['2022-10-11'], data.loc['2022-10-12'], data.loc['2022-10-13']]
     result_arr = []
@@ -85,7 +85,7 @@ def result_by_time_series(data):
     visualize_for_time_series(result_arr)
     
 def visualize_for_time_series(data):
-    fig = plt.figure(figsize=(10,8))    
+    fig = plt.figure()    
 
     for i in range(len(data)):
         ax = fig.add_subplot(2,2,i+1)
@@ -99,7 +99,7 @@ def visualize_for_time_series(data):
         '''
         
         props={
-            'title':'2022-10-1' + str(i+1) + " Fitbit Data Graph",
+            'title':'2022-10-1' + str(i),
             'xlabel':'Time',
             'ylabel':'Numbers'
         }
@@ -107,54 +107,52 @@ def visualize_for_time_series(data):
         ax.plot(day_data)
         ax.set_xticklabels(['00:00', '03:00', '06:00', '09:00', '12:00', '15:00', '18:00', '21:00', '24:00'], rotation=90, fontsize='small')
         ax.set(**props)
-        plt.legend(loc='best')
         plt.savefig('00 프로젝트/02 Health Data Project/data/image/fitbit_graph_2022-10-1{0}.png'.format(i), dpi=400)
-        
-    plt.subplots_adjust(hspace=2)
+    
+    plt.legend(loc='best')
+    plt.subplots_adjust(wspace=1, hspace=4)
     plt.show()
 
 def visualize(data):
     fig = plt.figure()
+    
     calories_ax = fig.add_subplot(2,2,1)
     steps_ax = fig.add_subplot(2,2,2)
     distance_ax = fig.add_subplot(2,2,3)
-    hist_ax = fig.add_subplot(2,2,4)
-    
-   
+    mets_ax = fig.add_subplot(2,2,4)
+
     calories_ax.plot(data.index, data['calories'],'r--', label='calories')
     steps_ax.plot(data.index, data['steps'], 'g--', label='steps')
     distance_ax.plot(data.index, data['distance'], 'b--', label='distance')
-    # distance_ax.plot(pd.to_timedelta(data['time']), data['distance'], 'b--', label='distance')
-
-    '''
-    plt.plot(pd.to_timedelta(data['time']), data['calories'],'r--', label='calories')
-    plt.plot(pd.to_timedelta(data['time']), data['steps'], 'g--', label='steps')
-    plt.plot(pd.to_timedelta(data['time']), data['distance'], 'b--', label='distance')
-    ''' 
+    mets_ax.plot(data.index, data['mets'], 'k--', label='distance')
 
     calories_props={
-        'title': 'Fitbit Time Series Graph',
         'xlabel': 'Date',
         'xticks':['2022-10-10', '2022-10-20', '2022-10-30', '2022-11-10', '2022-11-20'],
         'ylabel': 'calories'
     }
     steps_props={
-        'title': 'Fitbit Time Series Graph',
-        'xlabel': 'Time',
+        'xlabel': 'Date',
         'xticks':['2022-10-10', '2022-10-20', '2022-10-30', '2022-11-10', '2022-11-20'],
         'ylabel': 'steps'
     }
     distance_props={
-        'title': 'Fitbit Time Series Graph',
-        'xlabel': 'Time',
+        'xlabel': 'Date',
         'xticks':['2022-10-10', '2022-10-20', '2022-10-30', '2022-11-10', '2022-11-20'],
         'ylabel': 'distance'
+    }
+    mets_props={
+        'xlabel': 'Date',
+        'xticks':['2022-10-10', '2022-10-20', '2022-10-30', '2022-11-10', '2022-11-20'],
+        'ylabel': 'mets'
     }
     
     calories_ax.set(**calories_props)
     steps_ax.set(**steps_props)
     distance_ax.set(**distance_props)
+    mets_ax.set(**mets_props)
     
+    plt.suptitle('Fitbit Data Graph')
     plt.show()
      
 def pairplot(data):
@@ -165,11 +163,11 @@ def origin_data():
     filepath = '00 프로젝트/02 Health Data Project/data/fitbit_datasets/1005-1122.csv'
     data = get_data(filepath)
     # summarize(data)
-    get_daily_result(data)
+    # get_daily_result(data)
     # visualize_daily_data(data)
     # result_by_time_series(data)
-    # visualize(data)
-    # pairplot(data)
+    visualize(data)
+    pairplot(data)
 
 
 def main():
