@@ -23,12 +23,10 @@ def get_bp_data(files):
     print(data.describe())
 
 def get_data(filename):
-    fitbit_data = pd.DataFrame([], columns = ['distance', 'level', 'mets', 'calories', 'steps', 'dates'], dtype=float)
+    fitbit_data = pd.DataFrame([],columns = ['distance', 'level', 'mets', 'calories', 'steps', 'dates'], dtype=float)
     
-    df = pd.read_csv(filename)     # csv 파일 읽기        
+    df = pd.read_csv(filename)  
     data = df['data']
-    # print(data.describe())
-    # print(data.head())
     
     for i in range(2, len(data)):
         ex_data = data[i]
@@ -47,9 +45,8 @@ def get_data(filename):
         final = pd.merge(d_distance, d_calories, on='time')
         fitbit = pd.DataFrame(pd.merge(final, d_steps, on='time'))
         fitbit.columns = ['time','distance', 'level', 'mets', 'calories', 'steps']
-        fitbit['datets'] = d_date
+        fitbit['dates'] = d_date
         fitbit.index = pd.DatetimeIndex(str(d_date) + ' ' + fitbit['time'])
-        # fitbit.drop(['time'], axis=1, inplace=True)
         
         fitbit_data = pd.concat([fitbit_data, fitbit])
         
@@ -64,15 +61,15 @@ def summarize(data):
     
     
 def get_daily_result(data):
-    daily_result = pd.DataFrame([], columns=['distance', 'level','mets', 'calories', 'steps'])
-    daily_result['distance']=data.groupby(['dates'])['calories'].sum()
-    daily_result['level']=data.groupby(['dates'])['level'].sum()
-    daily_result['mets']=data.groupby(['dates'])['mets'].sum()
-    daily_result['calories']=data.groupby(['dates'])['calories'].sum()
-    daily_result['steps']=data.groupby(['dates'])['steps'].sum()
-    
+    daily_result = pd.DataFrame(data.groupby(['dates']).sum(), columns=['distance', 'level','mets', 'calories', 'steps'])
     print(daily_result.head(200))
- 
+    return daily_result
+
+def visualize_daily_data(data):
+    data.plot(x_compat=True, rot=90)
+    plt.suptitle('2022/10/05 ~ 2022/11/12 Fitbit Data')
+    plt.show()
+    
 def get_group_by_hour(data):
     return data.groupby(pd.Grouper(freq='60Min', base=0, label='right')).sum()
 
@@ -168,8 +165,9 @@ def origin_data():
     filepath = '00 프로젝트/02 Health Data Project/data/fitbit_datasets/1005-1122.csv'
     data = get_data(filepath)
     # summarize(data)
-    # get_daily_result(data)
-    result_by_time_series(data)
+    get_daily_result(data)
+    # visualize_daily_data(data)
+    # result_by_time_series(data)
     # visualize(data)
     # pairplot(data)
 
