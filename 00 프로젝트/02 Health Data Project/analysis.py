@@ -21,51 +21,7 @@ def get_bp_data(files):
     print(data)
     print(data.info())
     print(data.describe())
-    
-def example():
-    """
-    {'distance': {
-        'activities-distance': [{'dateTime': '2022-11-22', 'value': '0'}],
-        'activities-distance-intraday': {
-            'dataset':[
-                {'time': '04:00:00', 'value': 0}, 
-                {'time': '04:01:00', 'value': 0}, 
-                {'time': '04:02:00', 'value': 0},
-                {'time': '04:03:00', 'value': 0},
-                {'time': '04:04:00', 'value': 0}
-            ],
-            'datasetInterval': 1,
-            'datasetType': 'minute'
-        }  
-    },
-    'calories': {
-        'activities-calories': [{'dateTime': '2022-11-22', 'value': '72.55'}],
-        'activities-calories-intraday': {
-            'dataset': [
-                {'level': 0, 'mets': 10, 'time': '04:00:00', 'value': 1.2091},
-                {'level': 0, 'mets': 10, 'time': '04:01:00', 'value': 1.2091},
-                {'level': 0, 'mets': 10, 'time': '04:02:00', 'value': 1.2091},
-                {'level': 0, 'mets': 10, 'time': '04:03:00', 'value': 1.2091}
-            ],
-            'datasetInterval': 1,
-            'datasetType': 'minute'
-        }
-    },
-    'steps': {
-        'activities-steps': [{'dateTime': '2022-11-22', 'value': '0'}],
-        'activities-steps-intraday': {
-            'dataset': [
-                {'time': '04:00:00', 'value': 0},
-                {'time': '04:01:00', 'value': 0},
-                {'time': '04:02:00', 'value': 0},
-                {'time': '04:03:00', 'value': 0},
-            ],
-            'datasetInterval': 1,
-            'datasetType': 'minute'
-            }
-        }
-    }
-    """
+
 def get_data(filename):
     fitbit_data = pd.DataFrame([], columns = ['distance', 'level', 'mets', 'calories', 'steps', 'dates'], dtype=float)
     
@@ -132,8 +88,8 @@ def result_by_time_series(data):
     visualize_for_time_series(result_arr)
     
 def visualize_for_time_series(data):
-    fig = plt.figure()
-    
+    fig = plt.figure(figsize=(10,8))    
+
     for i in range(len(data)):
         ax = fig.add_subplot(2,2,i+1)
         day_data = data[i]
@@ -150,14 +106,16 @@ def visualize_for_time_series(data):
             'xlabel':'Time',
             'ylabel':'Numbers'
         }
+        day_data.plot(x_compat=True, rot=90)
         ax.plot(day_data)
         ax.set_xticklabels(['00:00', '03:00', '06:00', '09:00', '12:00', '15:00', '18:00', '21:00', '24:00'], rotation=90, fontsize='small')
         ax.set(**props)
+        plt.legend(loc='best')
+        plt.savefig('00 프로젝트/02 Health Data Project/data/image/fitbit_graph_2022-10-1{0}.png'.format(i), dpi=400)
         
-    plt.subplots_adjust(hspace=1)
-    plt.legend(loc='best')
+    plt.subplots_adjust(hspace=2)
     plt.show()
-    
+
 def visualize(data):
     fig = plt.figure()
     calories_ax = fig.add_subplot(2,2,1)
