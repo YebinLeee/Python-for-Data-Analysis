@@ -59,8 +59,6 @@ def simple_graph():
         
         plt.show()
     ```
-    
-
     <img src="https://user-images.githubusercontent.com/71310074/204235058-d1ae02c1-eb96-47b7-9720-1441cee251a5.png" width=350>
 
 
@@ -110,7 +108,7 @@ def simple_graph():
     ```
     
 
-    <img src="https://user-images.githubusercontent.com/71310074/204235929-a9a3aa12-57be-485e-8a06-f1a57ec04726.png" width=300>
+<img src="https://user-images.githubusercontent.com/71310074/204235929-a9a3aa12-57be-485e-8a06-f1a57ec04726.png" width=300>
 
 
 ### 그래프 꾸미기 - 눈금, 라벨, 범례
@@ -533,9 +531,8 @@ def bar_grahh_party_tips():
 
 
 -**산포도 행렬** : 탐색 데이터 분석에서 변수 그룹 간의 모든 산포도를 살펴보는 일
-    - `seaborn.pairplot()` 을 이용해 대각선을 따라 각 변수에 대한 히스토그램이나 밀도 그래프 생성
-
-    <img src="https://user-images.githubusercontent.com/71310074/204238598-654f5d17-8445-433f-bcdb-5f1e3d5b898d.png" width=300>
+- `seaborn.pairplot()` 을 이용해 대각선을 따라 각 변수에 대한 히스토그램이나 밀도 그래프 생성 
+<img src="https://user-images.githubusercontent.com/71310074/204238598-654f5d17-8445-433f-bcdb-5f1e3d5b898d.png" width=300>
 
 <br>
 
