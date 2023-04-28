@@ -1,6 +1,8 @@
 # Python for Data Analysis
 - 책 링크 : [파이썬 라이브러리를 활용한 데이터 분석 2판](https://product.kyobobook.co.kr/detail/S000001810160)
 - 22년 2학기 빅데이터프로그래밍 강의 
+- [기말 Fitbit 데이터 분석 프로젝트](https://github.com/YebinLeee/Python-for-Data-Analysis/tree/main/00%20%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8/02%20Health%20Data%20Project)
+
 
 <br>
 
